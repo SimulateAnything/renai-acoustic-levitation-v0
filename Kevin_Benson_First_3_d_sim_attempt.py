@@ -49,7 +49,7 @@ k0 = 2 * np.pi / lambda0
 print (f"f0 = {f0:0.1f} Hz, c0 = {c0:0.1f} m/s, lambda0 = {lambda0:0.4g} m, k0 = {k0:0.4g} m")
 
 # phased array settings
-theta_steering_deg = np.arange(0.0, 0.0, 1.0) # degrees
+theta_steering_deg = np.arange(-1.0, 1.0, 1.0) # degrees
 phased_pitch = lambda0/16.0
 num_phased_elements = 2 # integer
 aperature = phased_pitch * (num_phased_elements - 1)
