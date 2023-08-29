@@ -3,23 +3,23 @@
 # Copyright (C) 2023 Prakash Manandhar
 #
 # MIT License:
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
-# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
 # persons to whom the Software is furnished to do so, subject to the following conditions:
 #
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
-# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 # Phase arrays inspired by and,
 # adapted from/combining approaches in: https://gitlab.com/cfd-pizca/hef-acoustics,
 #  and https://github.com/FEniCS/dolfinx/blob/main/python/demo/demo_helmholtz.py
 #  and https://fenicsproject.discourse.group/t/pointsource-in-dolfinx/8337/13
-#  and https://fenicsproject.discourse.group/t/is-there-a-way-to-implement-perfectly-matched-layers/4951 
-#  and https://github.com/samuelpgroth/waves-fenicsx/blob/master/frequency/demo0_scattering_by_circle.py 
+#  and https://fenicsproject.discourse.group/t/is-there-a-way-to-implement-perfectly-matched-layers/4951
+#  and https://github.com/samuelpgroth/waves-fenicsx/blob/master/frequency/demo0_scattering_by_circle.py
 # +
 
 import numpy as np
@@ -37,23 +37,23 @@ from ufl import dx, grad, inner
 from mpi4py import MPI
 from petsc4py import PETSc
 
-#frequency, speed, and wavelength
+# frequency, speed, and wavelength
 
-f0 = 800.0 # Hz
-c0 = 330.0 # m/s
-lambda0 = c0/f0 # m
+f0 = 800.0  # Hz
+c0 = 330.0  # m/s
+lambda0 = c0/f0  # m
 
 # wavenumber
 k0 = 2 * np.pi / lambda0
 
-print (f"f0 = {f0:0.1f} Hz, c0 = {c0:0.1f} m/s, lambda0 = {lambda0:0.4g} m, k0 = {k0:0.4g} m")
+print(f"f0 = {f0:0.1f} Hz, c0 = {c0:0.1f} m/s, lambda0 = {lambda0:0.4g} m, k0 = {k0:0.4g} m")
 
 # phased array settings
-theta_steering_deg = np.arange(-1.0, 1.0, 1.0) # degrees
+theta_steering_deg = np.arange(-1.0, 1.0, 1.0)  # degrees
 phased_pitch = lambda0/16.0
-num_phased_elements = 2 # integer
+num_phased_elements = 2  # integer
 aperature = phased_pitch * (num_phased_elements - 1)
-near_field = aperature*aperature / ( 4*lambda0 )
+near_field = aperature*aperature / (4*lambda0)
 print(f"pitch = {phased_pitch} m")
 print(f"Aperatture = {aperature} m")
 print(f"Nearfield = {near_field} m")
@@ -93,7 +93,7 @@ def adiabatic_layer(x):
 
     # Find borders of width d_absorb in x- and y-directions
     in_absorber_x = (np.abs(x[0]) >= dim_x/2 - d_absorb)
-    #in_absorber_y = (      -x[1]  >= dim_x/2 - d_absorb) # bottom wall is absorbing reflecting, top reflecting
+    # in_absorber_y = (      -x[1]  >= dim_x/2 - d_absorb) # bottom wall is absorbing reflecting, top reflecting
     in_absorber_z = (np.abs(x[2]) >= dim_x/2 - d_absorb)
     in_absorber_y = (np.abs(x[1]) >= dim_x/2 - d_absorb)
 
@@ -122,25 +122,22 @@ n = ufl.FacetNormal(msh)
 """
 
 
-msh = create_box(MPI.COMM_WORLD, [np.array([-dim_x/2, -dim_x/2, -dim_x/2]), np.array([dim_x/2, dim_x/2, dim_x/2])], [n_elem, n_elem, n_elem])
+msh = create_box(MPI.COMM_WORLD, [np.array([-dim_x/2, -dim_x/2, -dim_x/2]),
+                 np.array([dim_x/2, dim_x/2, dim_x/2])], [n_elem, n_elem, n_elem])
 
 n = ufl.FacetNormal(msh)
 
 
-
-
-
-
 # This implementation relies on the complex mode of dolfin-x
-if not np.issubdtype(PETSc.ScalarType, np.complexfloating):
-    print('This demo only works with PETSc-complex')
-    exit()
+# if not np.issubdtype(PETSc.ScalarType, np.complexfloating):
+#     print('This demo only works with PETSc-complex')
+#     exit()
 
 
 def simulate_steering_anlge(theta_deg, xdmffile):
     print(f"Solving for steering angle {theta_deg} deg ...")
-    theta_steering = theta_deg*np.pi/180.0 # radians
-    d_phi = 2*np.pi*phased_pitch*np.sin( theta_steering )/lambda0
+    theta_steering = theta_deg*np.pi/180.0  # radians
+    d_phi = 2*np.pi*phased_pitch*np.sin(theta_steering)/lambda0
 
     # Test and trial function space
     V = FunctionSpace(msh, ("Lagrange", deg))
@@ -158,27 +155,32 @@ def simulate_steering_anlge(theta_deg, xdmffile):
     total_phase_angle = 0
     for i_loc in range(-int(num_phased_elements/2), int(num_phased_elements/2)):
         phased_dx = i_loc * phased_pitch
-        A = PETSc.ScalarType(np.sin(total_phase_angle) + np.cos(total_phase_angle)*1j)
-        dofs = locate_dofs_geometrical(V,  lambda x: np.isclose(x.T, [phased_dx, 0.0, 0.0], atol=0.1).all(axis=1))
-        #print(f"dx = {phased_dx}")
-        #print(dofs)25
+        A = PETSc.ScalarType(np.sin(total_phase_angle) +
+                             np.cos(total_phase_angle)*1j)
+        dofs = locate_dofs_geometrical(V, lambda x: np.isclose(
+            x.T, [phased_dx, 0.0, 0.0], atol=0.1).all(axis=1))
+        # print(f"dx = {phased_dx}")
+        # print(dofs)25
         f.x.array[dofs] = A
         total_phase_angle += d_phi
 
-    a = inner(grad(u), grad(v)) * dx - k0**2 * inner(u, v) * dx - k_absorb * inner(u, v) * dx
+    a = inner(grad(u), grad(v)) * dx - k0**2 * \
+        inner(u, v) * dx - k_absorb * inner(u, v) * dx
     L = inner(f, v) * dx
 
     # Compute solution
     uh = Function(V)
     uh.name = "u"
-    problem = LinearProblem(a, L, u=uh, petsc_options={"ksp_type": "preonly", "pc_type": "lu"})
+    problem = LinearProblem(a, L, u=uh, petsc_options={
+                            "ksp_type": "preonly", "pc_type": "lu"})
     problem.solve()
 
     file.write_function(uh, theta_deg)
 # -
 
-if __name__ == "__main__":
-    with XDMFFile(MPI.COMM_WORLD, f"out_phased_array/phased_array_near_wall_reflect_{num_phased_elements}.xdmf", "w", encoding=XDMFFile.Encoding.HDF5) as file:
-        file.write_mesh(msh)
-        for th in theta_steering_deg:
-            simulate_steering_anlge(th, file)
+
+# if __name__ == "__main__":
+with XDMFFile(MPI.COMM_WORLD, f"out_phased_array/phased_array_near_wall_reflect_{num_phased_elements}.xdmf", "w", encoding=XDMFFile.Encoding.HDF5) as file:
+    file.write_mesh(msh)
+    for th in theta_steering_deg:
+        simulate_steering_anlge(th, file)
