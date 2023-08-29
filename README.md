@@ -25,14 +25,26 @@ the --progress=plain help display the build process along with any logs or error
 
 Then I ran the container in the background with the -d command:
 
-~~~ sudo docker run -d my_dolfinx_project ~~~
+
+~~~
+
+ sudo docker run -d my_dolfinx_project 
+~~~
+
+
 
 
 
 
 And then attached the terminal to it.
 
-~~~ sudo docker exec -it d3231340d08  /bin/bash ~~~
+
+~~~
+
+ sudo docker exec -it d3231340d08  /bin/bash 
+~~~
+
+
 
 The logs were displayed on the screen regarding the out_phased_array folder.
 
@@ -46,13 +58,25 @@ If the container could run for a long period even after the completion of the co
 
 This kept the container up and running even after the execution of its task:
 
-~~~ sudo docker run -d my_dolfinx_project tail -f /dev/null ~~~
+
+~~~
+
+ sudo docker run -d my_dolfinx_project tail -f /dev/null 
+~~~
+
+
 
 
 
 Then I attached a terminal to the container.
 
-~~~sudo docker exec -it 84fee88e2cc450 /bin/bash ~~~
+
+~~~
+
+sudo docker exec -it 84fee88e2cc450 /bin/bash 
+~~~
+
+
 
 
 
@@ -61,7 +85,13 @@ This allowed the container to not stop even after the completion of the task.
 
 Then in the next terminal I copied the file from the running container as:
 
-~~~ sudo docker cp 84fee88e2cc4:/app/out_phased_array . ~~~
+
+~~~
+
+ sudo docker cp 84fee88e2cc4:/app/out_phased_array . 
+~~~
+
+
 
 
 
