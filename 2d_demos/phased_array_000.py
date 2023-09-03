@@ -161,7 +161,7 @@ def simulate_steering_anlge(theta_deg, xdmffile):
 # -
 
 if __name__ == "__main__":
-    with XDMFFile(MPI.COMM_WORLD, f"out_phased_array/phased_array_near_wall_reflect_{num_phased_elements}.xdmf", "w", encoding=XDMFFile.Encoding.HDF5) as file:
+    with XDMFFile(MPI.COMM_WORLD, f"out_phased_array/2d_demos_phased_array_00{num_phased_elements}.xdmf", "w", encoding=XDMFFile.Encoding.HDF5) as file:
         file.write_mesh(msh)
         for th in theta_steering_deg:
             simulate_steering_anlge(th, file)

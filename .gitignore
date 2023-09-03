@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+/out_phased_array
 # C extensions
 *.so
 
