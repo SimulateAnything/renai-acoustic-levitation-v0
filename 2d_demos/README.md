@@ -24,7 +24,9 @@ Everything was working fine.
 
 # demo_001
 
-The simulation was a little slower as compared to the above one
+In this simulation we use the size of the phased array as 32.
+
+When doing so, the simulation was a little slower as compared to the above one
 
 <img src="/2d_demos/output_screenshots/Screenshot from 2023-09-03 16-14-43.png" alt="Screenshot">
 
@@ -34,10 +36,11 @@ This is when the rendering happened.
 
 # demo_002
 
-When the array elements was reduced to 8, then the movement was slow.
+In this simulation we use the size of the phased array as 8.
+
+When the array elements was reduced to 8, then the simulation was slow.
 <img src="/2d_demos/output_screenshots/Screenshot from 2023-09-03 16-11-25.png" alt="Screenshot">
 
-running the simulation gave such feeling.
 
 <img src="/2d_demos/output_screenshots/Screenshot from 2023-09-03 16-11-30.png" alt="Screenshot">
 
