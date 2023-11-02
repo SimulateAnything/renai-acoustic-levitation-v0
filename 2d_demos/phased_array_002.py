@@ -34,6 +34,7 @@ from ufl import dx, grad, inner
 from mpi4py import MPI
 from petsc4py import PETSc
 
+fileNumber=2
 #frequency, speed, and wavelength
 
 f0 = 800.0 # Hz
@@ -48,7 +49,7 @@ print (f"f0 = {f0:0.1f} Hz, c0 = {c0:0.1f} m/s, lambda0 = {lambda0:0.4g} m, k0 =
 # phased array settings
 theta_steering_deg = np.arange(-75, 75, 1.0) # degrees
 phased_pitch = lambda0/16.0
-num_phased_elements = 64 # integer
+num_phased_elements = 8 # integer
 aperature = phased_pitch * (num_phased_elements - 1)
 near_field = aperature*aperature / ( 4*lambda0 )
 print(f"pitch = {phased_pitch} m")
@@ -161,7 +162,7 @@ def simulate_steering_anlge(theta_deg, xdmffile):
 # -
 
 if __name__ == "__main__":
-    with XDMFFile(MPI.COMM_WORLD, f"out_phased_array/2d_demos_phased_array_00{num_phased_elements}.xdmf", "w", encoding=XDMFFile.Encoding.HDF5) as file:
+    with XDMFFile(MPI.COMM_WORLD, f"out_phased_array/2d_demos_phased_array_00{fileNumber}.xdmf", "w", encoding=XDMFFile.Encoding.HDF5) as file:
         file.write_mesh(msh)
         for th in theta_steering_deg:
             simulate_steering_anlge(th, file)
